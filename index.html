@@ -2,23 +2,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Robot Grid Simulator Delta Camp</title>
+  <title>Robot Grid Simulator</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
       margin: 20px;
-    }
-    #speechBubble {
-      background: #fff3c0;
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 1px solid #aaa;
-      display: inline-block;
-      font-family: sans-serif;
-      margin-bottom: 6px;
-      visibility: hidden;
-      max-width: 200px;
     }
     #grid {
       display: grid;
@@ -48,6 +37,17 @@
       height: 100%;
       position: absolute;
     }
+    #speechBubble {
+      background: #fff3c0;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid #aaa;
+      display: inline-block;
+      font-family: sans-serif;
+      margin-bottom: 6px;
+      visibility: hidden;
+      max-width: 200px;
+    }
     #memoryView {
       margin-top: 10px;
       background: #f0f0f0;
@@ -62,14 +62,19 @@
 <body>
 
 <h2>🧹 Robot Cleaning Simulator</h2>
-<button onclick="start()">▶ Start</button>
-<button onclick="reset()">🔄 Reset</button>
-<button onclick="onRandomizeGrid()">🎲 Randomize</button>
+<div style="margin-bottom: 10px;">
+  <button onclick="start()">▶ Start</button>
+  <button onclick="pause()">⏸ Pause</button>
+  <button onclick="step()">⏭ Step</button>
+  <button onclick="reset()">🔄 Reset</button>
+  <button onclick="onRandomizeGrid()">🎲 Randomize</button>
+</div>
 
 <div id="grid"></div>
 <div id="speechBubble"></div>
 <pre id="memoryView"></pre>
 
+<script src="algorithm.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

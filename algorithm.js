@@ -4,7 +4,7 @@
 
 class Robot {
     constructor() {
-        this.memory = { counter: 0 };
+        this.memory = 0; // just a number
     }
 
     nextStep({ x, y, cellIsDirty }) {
@@ -12,12 +12,10 @@ class Robot {
             return { action: 'CLEAN', say: "dirty!" };
         }
 
-        if (this.memory.counter < 5) {
-            this.memory.counter++;
+        if (this.memory < 5) {
+            this.memory++;
             return { action: 'MOVE RIGHT' };
         }
-
-        return { say: "done!" };
 
         return null;
     }

@@ -1,7 +1,6 @@
 /**
  * Created by mac on 6/28/25
  */
-
 const size = 20;
 const gridElem = document.getElementById("grid");
 const bubbleEl = document.getElementById("speechBubble");
@@ -14,6 +13,7 @@ let robot = { x: 0, y: 0, dir: 'RIGHT' };
 let visited = new Map();
 let stepCounter = 0;
 let timer = null;
+let autoRun = false;
 
 function renderGrid() {
     gridElem.innerHTML = '';
@@ -64,8 +64,8 @@ function renderGrid() {
 
 function updateMemoryView() {
     const memEl = document.getElementById("memoryView");
-    const mem = window.robotInstance?.memory || {};
-    memEl.textContent = JSON.stringify(mem, null, 2);
+    const mem = window.robotInstance?.memory ?? 'undefined';
+    memEl.textContent = `Memory: ${mem}`;
 }
 
 function doStep() {
@@ -113,7 +113,10 @@ function doStep() {
     }
 
     renderGrid();
-    timer = setTimeout(doStep, 150);
+
+    if (autoRun) {
+        timer = setTimeout(doStep, 150);
+    }
 }
 
 function randomizeGrid() {
@@ -130,32 +133,29 @@ function resetSimulation() {
     renderGrid();
 }
 
-async function reloadAlgorithm() {
-    const old = document.getElementById("algo-script");
-    if (old) old.remove();
-
-    return new Promise(resolve => {
-        const script = document.createElement("script");
-        script.id = "algo-script";
-        script.src = 'algorithm.js?t=' + Date.now();
-        script.onload = resolve;
-        document.body.appendChild(script);
-    });
-}
-
 window.start = async function () {
-    await reloadAlgorithm();
-
-    // If already defined, reinstantiate to reset memory
     if (window.robotInstance?.constructor) {
         window.robotInstance = new window.robotInstance.constructor();
     }
 
     resetSimulation();
+    autoRun = true;
+    doStep();
+};
+
+window.pause = () => {
+    autoRun = false;
+    clearTimeout(timer);
+};
+
+window.step = () => {
+    autoRun = false;
+    clearTimeout(timer);
     doStep();
 };
 
 window.reset = resetSimulation;
+
 window.onRandomizeGrid = () => {
     randomizeGrid();
     renderGrid();
