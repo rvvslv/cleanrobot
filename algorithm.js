@@ -12,7 +12,7 @@ class Robot {
             return { action: 'CLEAN', say: "dirty!" };
         }
 
-        if (this.memory < 5) {
+        if (this.memory < 50) {
             this.memory++;
             return { action: 'MOVE RIGHT' };
         }

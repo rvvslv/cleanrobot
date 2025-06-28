@@ -126,6 +126,11 @@ function randomizeGrid() {
 }
 
 function resetSimulation() {
+    // Recreate a fresh robot instance using its constructor
+    if (window.robotInstance?.constructor) {
+        window.robotInstance = new window.robotInstance.constructor();
+    }
+
     robot = { x: 0, y: 0, dir: 'RIGHT' };
     visited = new Map([[`0,0`, 0]]);
     stepCounter = 0;
