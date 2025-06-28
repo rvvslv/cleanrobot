@@ -2,17 +2,25 @@
  * Created by mac on 6/28/25
  */
 
-let robotMemory = {
-    counter: 0
-};
-
-function nextStep({ x, y, cellIsDirty }) {
-    if (cellIsDirty) return 'CLEAN';
-
-    if (robotMemory.counter < 5) {
-        robotMemory.counter++;
-        return 'MOVE RIGHT';
+class Robot {
+    constructor() {
+        this.memory = { counter: 0 };
     }
 
-    return null;
+    nextStep({ x, y, cellIsDirty }) {
+        if (cellIsDirty) {
+            return { action: 'CLEAN', say: "dirty!" };
+        }
+
+        if (this.memory.counter < 5) {
+            this.memory.counter++;
+            return { action: 'MOVE RIGHT' };
+        }
+
+        return { say: "done!" };
+
+        return null;
+    }
 }
+
+window.robotInstance = new Robot();

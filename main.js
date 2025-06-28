@@ -4,6 +4,7 @@
 
 const size = 20;
 const gridElem = document.getElementById("grid");
+const bubbleEl = document.getElementById("speechBubble");
 
 let grid = Array.from({ length: size }, () =>
     Array.from({ length: size }, () => Math.random() < 0.3)
@@ -63,22 +64,37 @@ function renderGrid() {
 
 function updateMemoryView() {
     const memEl = document.getElementById("memoryView");
-    memEl.textContent = JSON.stringify(robotMemory, null, 2);
+    const mem = window.robotInstance?.memory || {};
+    memEl.textContent = JSON.stringify(mem, null, 2);
 }
 
 function doStep() {
-    if (typeof nextStep !== 'function') return;
+    if (!window.robotInstance?.nextStep) return;
 
     stepCounter++;
     visited.set(`${robot.x},${robot.y}`, stepCounter);
 
-    const action = nextStep({
+    const result = window.robotInstance.nextStep({
         x: robot.x,
         y: robot.y,
         cellIsDirty: grid[robot.y][robot.x],
     });
 
-    if (!action) return;
+    if (!result) return;
+
+    const action = typeof result === 'string' ? result : result.action;
+    const say = typeof result === 'object' && result.say;
+
+    if (say) {
+        bubbleEl.textContent = say;
+        bubbleEl.style.visibility = 'visible';
+        clearTimeout(bubbleEl._hideTimer);
+        bubbleEl._hideTimer = setTimeout(() => {
+            bubbleEl.style.visibility = 'hidden';
+        }, 1500);
+    } else {
+        bubbleEl.style.visibility = 'hidden';
+    }
 
     if (action === 'CLEAN') {
         grid[robot.y][robot.x] = false;
@@ -111,7 +127,6 @@ function resetSimulation() {
     visited = new Map([[`0,0`, 0]]);
     stepCounter = 0;
     clearTimeout(timer);
-    randomizeGrid();
     renderGrid();
 }
 
@@ -119,20 +134,29 @@ async function reloadAlgorithm() {
     const old = document.getElementById("algo-script");
     if (old) old.remove();
 
-    const script = document.createElement("script");
-    script.id = "algo-script";
-    script.src = 'algorithm.js?t=' + Date.now();
-    document.body.appendChild(script);
+    return new Promise(resolve => {
+        const script = document.createElement("script");
+        script.id = "algo-script";
+        script.src = 'algorithm.js?t=' + Date.now();
+        script.onload = resolve;
+        document.body.appendChild(script);
+    });
 }
 
 window.start = async function () {
     await reloadAlgorithm();
+
+    // If already defined, reinstantiate to reset memory
+    if (window.robotInstance?.constructor) {
+        window.robotInstance = new window.robotInstance.constructor();
+    }
+
     resetSimulation();
     doStep();
 };
 
 window.reset = resetSimulation;
-window.randomizeGrid = () => {
+window.onRandomizeGrid = () => {
     randomizeGrid();
     renderGrid();
 };

@@ -9,6 +9,17 @@
       text-align: center;
       margin: 20px;
     }
+    #speechBubble {
+      background: #fff3c0;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid #aaa;
+      display: inline-block;
+      font-family: sans-serif;
+      margin-bottom: 6px;
+      visibility: hidden;
+      max-width: 200px;
+    }
     #grid {
       display: grid;
       grid-template-columns: repeat(20, 24px);
@@ -53,9 +64,10 @@
 <h2>🧹 Robot Cleaning Simulator</h2>
 <button onclick="start()">▶ Start</button>
 <button onclick="reset()">🔄 Reset</button>
-<button onclick="randomizeGrid()">🎲 Randomize</button>
+<button onclick="onRandomizeGrid()">🎲 Randomize</button>
 
 <div id="grid"></div>
+<div id="speechBubble"></div>
 <pre id="memoryView"></pre>
 
 <script src="main.js"></script>
