@@ -12,12 +12,21 @@ class Robot {
             return { action: 'CLEAN', say: "dirty!" };
         }
 
-        if (this.memory < 50) {
-            this.memory++;
-            return { action: 'MOVE RIGHT' };
+        if (this.memory === 0) {
+            if (y === 19) {
+                this.memory = 1;
+                return { action: 'MOVE RIGHT' };
+            }
+            return { action: 'MOVE UP' };
+        } else {
+            if (x === 0) {
+                this.memory = 0;
+                return { action: 'MOVE DOWN' };
+            }
+            return { action: 'MOVE LEFT' };
         }
 
-        return null;
+        return { action: 'MOVE RIGHT' };
     }
 }
 

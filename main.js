@@ -1,6 +1,11 @@
 /**
  * Created by mac on 6/28/25
  */
+
+var script = document.createElement('script');
+script.src = 'algorithm.js?t=' + new Date().getTime();
+document.head.appendChild(script);
+
 const size = 20;
 const gridElem = document.getElementById("grid");
 const bubbleEl = document.getElementById("speechBubble");
@@ -85,8 +90,19 @@ function doStep() {
     const action = typeof result === 'string' ? result : result.action;
     const say = typeof result === 'object' && result.say;
 
-    if (say) {
-        bubbleEl.textContent = say;
+    let blocked = "";
+    if (action === 'MOVE UP' && robot.y === 0) {
+        blocked = 'CAN NOT UP';
+    } else if (action === 'MOVE DOWN' && robot.y === size - 1) {
+        blocked = 'CAN NOT DOWN';
+    } else if (action === 'MOVE LEFT' && robot.x === 0) {
+        blocked = 'CAN NOT LEFT';
+    } else if (action === 'MOVE RIGHT' && robot.x === size - 1) {
+        blocked = 'CAN NOT RIGHT';
+    }
+
+    if (say || blocked) {
+        bubbleEl.textContent = say || blocked;
         bubbleEl.style.visibility = 'visible';
         clearTimeout(bubbleEl._hideTimer);
         bubbleEl._hideTimer = setTimeout(() => {
