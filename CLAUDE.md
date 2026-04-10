@@ -1,0 +1,1 @@
+cleverapps/CLAUDE.md
